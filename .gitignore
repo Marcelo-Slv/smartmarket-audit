@@ -1,0 +1,14 @@
+# Node
+node_modules/
+dist/
+.angular/
+.cache/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Sistema
+Thumbs.db
+.DS_Store
