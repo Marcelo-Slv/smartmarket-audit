@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMarket Audit — demo de importação de planilha CSV do fiscal.">
+    <title>Importar Planilha — SmartMarket Audit (demo)</title>
+    <link rel="stylesheet" href="../assets/css/estilo.css">
+    <script src="assets/js/dados.js"></script>
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">SA</div>
+            <div>
+                <div class="logo-titulo">SmartMarket Audit</div>
+                <div class="logo-sub">Demo online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="nav-link" href="index.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-link" href="auditoria.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
+            <a class="nav-link ativo" href="importar.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Importar Planilha
+            </a>
+            <a class="nav-link" href="relatorio.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Relatório
+            </a>
+            <a class="nav-link" href="tutorial.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Como usar
+            </a>
+        </nav>
+        <div class="sidebar-roda">
+            Dados fictícios de demonstração.<br>
+            <a href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Ver no GitHub</a>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Importar Planilha do Fiscal</h1>
+                <span class="badge">Simulação</span>
+            </div>
+            <p>Envie o CSV com as vendas da compra. O sistema usa esses dados para conferir com as câmeras.</p>
+        </div>
+
+        <div id="resultado"></div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Enviar arquivo</h2>
+                <p class="descricao">
+                    Colunas esperadas: <code>data</code>, <code>hora</code>, <code>produto</code>
+                    e (opcional) <code>quantidade</code>. Separador <code>;</code> ou <code>,</code>.
+                    <a href="../modelo.csv" download>Baixar modelo.csv</a>
+                </p>
+
+                <form id="form-importar" onsubmit="return simularImportacao(event)">
+                    <label>Arquivo CSV</label>
+                    <input type="file" id="campo-arquivo" accept=".csv,text/csv" required>
+                    <button type="submit" class="btn" style="margin-top:16px;">Importar Planilha</button>
+                </form>
+
+                <hr>
+
+                <h3>Limpar dados importados</h3>
+                <p class="descricao">Remove todas as vendas importadas da planilha.</p>
+                <button type="button" class="btn btn-bad" onclick="limparImportacao()">Limpar importações</button>
+            </div>
+
+            <div class="card">
+                <h2>Resumo</h2>
+                <div class="kpis" style="margin-bottom:0;">
+                    <div class="kpi">
+                        <h3>Vendas importadas</h3>
+                        <div class="valor accent" id="total-vendas">0</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top:18px;">Produtos não encontrados no catálogo</h3>
+                <div class="tabela-wrapper">
+                    <table id="tabela-sem-catalogo"></table>
+                </div>
+                <p class="descricao">
+                    Produtos que não existem na tabela <code>produtos</code>. Eles ainda são importados,
+                    mas ficam sinalizados para você cadastrar e reimportar.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Últimas importações</h2>
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Produto na planilha</th>
+                            <th>No catálogo?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-vendas"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    // Resumo
+    document.getElementById('total-vendas').textContent = DEMO.vendasImportadas;
+
+    // Produtos fora do catálogo
+    const tbSem = document.getElementById('tabela-sem-catalogo');
+    if (DEMO.semCatalogo.length === 0) {
+        tbSem.innerHTML = '<tr><td class="vazio">Todos os produtos da planilha já estão no catálogo.</td></tr>';
+    } else {
+        tbSem.innerHTML = `
+            <thead><tr><th>Produto</th><th>Linhas</th></tr></thead>
+            <tbody>${DEMO.semCatalogo.map(s => `<tr><td>${s.produto}</td><td>${s.linhas}</td></tr>`).join('')}</tbody>`;
+    }
+
+    // Últimas importações
+    const tbVendas = document.getElementById('tabela-vendas');
+    tbVendas.innerHTML = DEMO.vendas.map((v, i) => `
+        <tr>
+            <td>${DEMO.vendasImportadas - DEMO.vendas.length + i + 1}</td>
+            <td>${v.data}</td>
+            <td>${v.hora}</td>
+            <td>${v.produto}</td>
+            <td><span class="status ${v.catalogado ? 'ok' : 'bad'}">${v.catalogado ? 'Sim' : 'Não'}</span></td>
+        </tr>`).join('');
+
+    // Simulação de importação
+    function simularImportacao(event) {
+        event.preventDefault();
+        const arquivo = document.getElementById('campo-arquivo').files[0];
+        const nome = arquivo ? arquivo.name : 'planilha.csv';
+        const linhas = Math.floor(20 + Math.random() * 40);
+
+        document.getElementById('resultado').innerHTML = `
+            <div class="alert alert-ok">
+                Importação concluída: <strong>${linhas} linha(s)</strong> importada(s) de <strong>${nome}</strong>.
+                <br><small>Simulação de demonstração. No sistema real, os dados vão para o banco MySQL.</small>
+            </div>`;
+        document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+        return false;
+    }
+
+    function limparImportacao() {
+        if (!confirm('Excluir TODAS as vendas importadas da planilha?')) return;
+        document.getElementById('resultado').innerHTML = `
+            <div class="alert alert-ok">Todas as vendas importadas foram removidas. <small>(simulação)</small></div>`;
+    }
+</script>
+</body>
+</html>

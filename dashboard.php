@@ -1,5 +1,6 @@
 <?php
 require_once 'conexao.php';
+$pagina_atual = 'dashboard';
 
 $msg  = $_GET['msg']  ?? '';
 $erro = $_GET['erro'] ?? '';
@@ -68,128 +69,149 @@ $historico = $stmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div class="container">
+<div class="layout">
 
-    <nav class="nav">
-        <a href="dashboard.php" class="ativo">Dashboard</a>
-        <a href="auditoria_nova.php">Nova Auditoria</a>
-        <a href="importar.php">Importar Planilha</a>
-        <a href="relatorio.php">Relatório</a>
-    </nav>
+    <?php include '_nav.php'; ?>
 
-    <div class="topo">
-        <h1>Dashboard Auditoria</h1>
-        <p>Sistema inteligente de auditoria de mercado autônomo</p>
-    </div>
-
-    <?php if ($msg) : ?>
-        <div class="msg"><?= h($msg) ?></div>
-    <?php endif; ?>
-    <?php if ($erro) : ?>
-        <div class="erro"><?= h($erro) ?></div>
-    <?php endif; ?>
-
-    <div class="kpis">
-        <div class="kpi">
-            <h3>Total Auditorias</h3>
-            <h1><?= $total_auditorias ?></h1>
-        </div>
-        <div class="kpi success">
-            <h3>OK</h3>
-            <h1><?= $total_ok ?></h1>
-        </div>
-        <div class="kpi danger">
-            <h3>Divergências</h3>
-            <h1><?= $total_div ?></h1>
-        </div>
-        <div class="kpi">
-            <h3>Taxa de Divergência</h3>
-            <h1><?= $taxa ?>%</h1>
-        </div>
-        <div class="kpi">
-            <h3>Auditorias Hoje</h3>
-            <h1><?= $total_hoje ?></h1>
-        </div>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <h2>Status das Auditorias</h2>
-            <canvas id="graficoAuditoria"></canvas>
-            <p style="margin-top:15px; color:#666;">
-                <a href="auditoria_nova.php" class="btn">+ Lançar Auditoria</a>
-            </p>
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Dashboard Auditoria</h1>
+                <span class="badge badge-ghost">Sistema real</span>
+            </div>
+            <p>Sistema de auditoria de mercado autônomo — compare o que as câmeras registraram com as vendas da planilha.</p>
         </div>
 
-        <div class="card">
-            <h2>Histórico</h2>
-            <form method="GET" action="dashboard.php">
-                <div class="filtros">
-                    <div>
-                        <label>Status</label>
-                        <select name="status">
-                            <option value="">Todos</option>
-                            <option value="OK" <?= $f_status === 'OK' ? 'selected' : '' ?>>OK</option>
-                            <option value="Divergente" <?= $f_status === 'Divergente' ? 'selected' : '' ?>>Divergente</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>De</label>
-                        <input type="date" name="data_inicio" value="<?= h($f_inicio) ?>">
-                    </div>
-                    <div>
-                        <label>Até</label>
-                        <input type="date" name="data_fim" value="<?= h($f_fim) ?>">
-                    </div>
+        <?php if ($msg) : ?>
+            <div class="alert alert-ok"><?= h($msg) ?></div>
+        <?php endif; ?>
+        <?php if ($erro) : ?>
+            <div class="alert alert-bad"><?= h($erro) ?></div>
+        <?php endif; ?>
+
+        <div class="kpis">
+            <div class="kpi">
+                <h3>Total de auditorias</h3>
+                <div class="valor accent"><?= $total_auditorias ?></div>
+                <div class="detalhe">registradas no período</div>
+            </div>
+            <div class="kpi">
+                <h3>OK</h3>
+                <div class="valor ok"><?= $total_ok ?></div>
+                <div class="detalhe">itens conferidos e pagos</div>
+            </div>
+            <div class="kpi">
+                <h3>Divergências</h3>
+                <div class="valor bad"><?= $total_div ?></div>
+                <div class="detalhe">câmera viu mais do que o pago</div>
+            </div>
+            <div class="kpi">
+                <h3>Taxa de divergência</h3>
+                <div class="valor warn"><?= $taxa ?>%</div>
+                <div class="detalhe">do total de auditorias</div>
+            </div>
+            <div class="kpi">
+                <h3>Auditorias hoje</h3>
+                <div class="valor accent"><?= $total_hoje ?></div>
+                <div class="detalhe">neste dia</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Status das auditorias</h2>
+                <div class="grafico-box">
+                    <canvas id="grafico"></canvas>
                 </div>
-                <button type="submit">Filtrar</button>
-                <a href="dashboard.php" class="btn btn-perigo" style="margin-top:15px;">Limpar</a>
-            </form>
+                <div style="text-align:center; margin-top:14px;">
+                    <a class="btn" href="auditoria_nova.php">+ Lançar Auditoria</a>
+                </div>
+            </div>
 
-            <table>
-                <tr>
-                    <th>Data/Hora</th>
-                    <th>Unidade</th>
-                    <th>Produtos</th>
-                    <th>Status</th>
-                    <th>Observação</th>
-                    <th>Ação</th>
-                </tr>
-                <?php if ($historico->num_rows === 0) : ?>
-                    <tr><td colspan="6" style="text-align:center; color:#888;">Nenhuma auditoria encontrada.</td></tr>
-                <?php endif; ?>
-                <?php while ($linha = $historico->fetch_assoc()) : ?>
-                    <tr>
-                        <td><?= formatar_data($linha['data_hora_video']) ?></td>
-                        <td><?= h($linha['unidade']) ?></td>
-                        <td><?= h($linha['itens']) ?></td>
-                        <td>
-                            <span class="<?= $linha['status'] === 'OK' ? 'ok' : 'divergente' ?>">
-                                <?= h($linha['status']) ?>
-                            </span>
-                        </td>
-                        <td><?= h($linha['observacao']) ?></td>
-                        <td>
-                            <a class="btn btn-perigo" style="padding:6px 12px;"
-                               href="remover.php?id=<?= (int) $linha['id'] ?>"
-                               onclick="return confirm('Excluir esta auditoria?');">Excluir</a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </table>
+            <div class="card">
+                <h2>Histórico de auditorias</h2>
+                <form method="GET" action="dashboard.php">
+                    <div class="filtros">
+                        <div>
+                            <label>Status</label>
+                            <select name="status">
+                                <option value="">Todos</option>
+                                <option value="OK" <?= $f_status === 'OK' ? 'selected' : '' ?>>OK</option>
+                                <option value="Divergente" <?= $f_status === 'Divergente' ? 'selected' : '' ?>>Divergente</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>De</label>
+                            <input type="date" name="data_inicio" value="<?= h($f_inicio) ?>">
+                        </div>
+                        <div>
+                            <label>Até</label>
+                            <input type="date" name="data_fim" value="<?= h($f_fim) ?>">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Filtrar</button>
+                    <a href="dashboard.php" class="btn btn-secundario">Limpar</a>
+                </form>
+
+                <div class="tabela-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data/Hora</th>
+                                <th>Unidade</th>
+                                <th>Produtos</th>
+                                <th>Status</th>
+                                <th>Observação</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($historico->num_rows === 0) : ?>
+                                <tr><td colspan="7" class="vazio">Nenhuma auditoria encontrada.</td></tr>
+                            <?php endif; ?>
+                            <?php while ($linha = $historico->fetch_assoc()) : ?>
+                                <tr>
+                                    <td>#<?= (int) $linha['id'] ?></td>
+                                    <td><?= formatar_data($linha['data_hora_video']) ?></td>
+                                    <td><?= h($linha['unidade']) ?></td>
+                                    <td><?= h($linha['itens']) ?></td>
+                                    <td>
+                                        <span class="status <?= $linha['status'] === 'OK' ? 'ok' : 'bad' ?>">
+                                            <?= h($linha['status']) ?>
+                                        </span>
+                                    </td>
+                                    <td><?= h($linha['observacao']) ?></td>
+                                    <td>
+                                        <a class="btn btn-bad btn-pequeno" href="remover.php?id=<?= (int) $linha['id'] ?>"
+                                           onclick="return confirm('Excluir esta auditoria?');">Excluir</a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 
 </div>
 
 <script>
-    new Chart(document.getElementById('graficoAuditoria'), {
+    new Chart(document.getElementById('grafico'), {
         type: 'doughnut',
         data: {
             labels: ['OK', 'Divergente'],
             datasets: [{
-                data: [<?= $total_ok ?>, <?= $total_div ?>]
+                data: [<?= $total_ok ?>, <?= $total_div ?>],
+                backgroundColor: ['#16a34a', '#dc2626'],
+                borderWidth: 0
             }]
+        },
+        options: {
+            plugins: {
+                legend: { position: 'bottom' }
+            }
         }
     });
 </script>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMarket Audit — demo de nova auditoria. Simule o registro do que as câmeras viram.">
+    <title>Nova Auditoria — SmartMarket Audit (demo)</title>
+    <link rel="stylesheet" href="../assets/css/estilo.css">
+    <script src="assets/js/dados.js"></script>
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">SA</div>
+            <div>
+                <div class="logo-titulo">SmartMarket Audit</div>
+                <div class="logo-sub">Demo online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="nav-link" href="index.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-link ativo" href="auditoria.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
+            <a class="nav-link" href="importar.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Importar Planilha
+            </a>
+            <a class="nav-link" href="relatorio.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Relatório
+            </a>
+            <a class="nav-link" href="tutorial.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Como usar
+            </a>
+        </nav>
+        <div class="sidebar-roda">
+            Dados fictícios de demonstração.<br>
+            <a href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Ver no GitHub</a>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Lançar Nova Auditoria</h1>
+                <span class="badge">Simulação</span>
+            </div>
+            <p>Registre o que as câmeras viram e o sistema compara com as vendas importadas da planilha.</p>
+        </div>
+
+        <div id="resultado"></div>
+
+        <div class="card" style="max-width: 720px;">
+            <form id="form-auditoria" onsubmit="return simularAuditoria(event)">
+                <label>Unidade / Condomínio</label>
+                <select id="select-unidade" required>
+                    <option value="">Selecione...</option>
+                </select>
+
+                <label>Data e hora do vídeo</label>
+                <input type="datetime-local" id="campo-data" required>
+
+                <label>Observação</label>
+                <textarea id="campo-obs" rows="3"></textarea>
+
+                <hr>
+
+                <h3>Produtos vistos na câmera</h3>
+                <div id="produtos-container"></div>
+
+                <button type="button" class="btn btn-secundario" onclick="adicionarProduto()">+ Adicionar Produto</button>
+                <button type="submit" class="btn" style="margin-top:14px;">Analisar Auditoria</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Como funciona a conferência</h2>
+            <ol style="padding-left:20px; color:var(--muted); line-height:1.7; font-size:14px;">
+                <li>Você assiste o vídeo da câmera e cadastra o que viu (produto + quantidade);</li>
+                <li>O sistema procura o mesmo produto nas <strong>vendas importadas da planilha</strong> em um intervalo de ±10 minutos;</li>
+                <li>Se a câmera viu <strong>mais do que foi pago</strong>, a auditoria fica <strong class="bad">Divergente</strong>;</li>
+                <li>Se tudo bateu, fica <strong class="ok">OK</strong>.</li>
+            </ol>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    // Preenche unidade
+    const selectUnidade = document.getElementById('select-unidade');
+    DEMO.unidades.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u;
+        opt.textContent = u;
+        selectUnidade.appendChild(opt);
+    });
+
+    // Preenche selects de produto
+    function opcoesProduto() {
+        return DEMO.produtos.map(p => `<option>${p}</option>`).join('');
+    }
+
+    function adicionarProduto() {
+        const container = document.getElementById('produtos-container');
+        const bloco = document.createElement('div');
+        bloco.className = 'produto-item';
+        bloco.innerHTML = `
+            <div class="linha-produto">
+                <div>
+                    <label>Produto</label>
+                    <select required>${opcoesProduto()}</select>
+                </div>
+                <div>
+                    <label>Quantidade</label>
+                    <input type="number" min="1" value="1" required>
+                </div>
+                <button type="button" class="btn btn-bad btn-pequeno" onclick="this.parentElement.parentElement.remove()">Remover</button>
+            </div>`;
+        container.appendChild(bloco);
+    }
+    adicionarProduto();
+
+    // Simulação da comparação
+    // (na versão real, isso consulta o banco MySQL)
+    const pagos = ['Coca-Cola 2L', 'Leite Integral 1L', 'Arroz 5kg'];
+
+    function simularAuditoria(event) {
+        event.preventDefault();
+
+        const produtos = Array.from(document.querySelectorAll('#produtos-container .produto-item'));
+        if (produtos.length === 0) {
+            alert('Adicione pelo menos um produto.');
+            return false;
+        }
+
+        let divergiu = false;
+        let listaItens = [];
+        produtos.forEach(item => {
+            const nome = item.querySelector('select').value;
+            const qtd = parseInt(item.querySelector('input[type=number]').value, 10) || 1;
+            listaItens.push(`${nome} x${qtd}`);
+            if (!pagos.includes(nome)) {
+                divergiu = true;
+            }
+        });
+
+        const status = divergiu ? 'Divergente' : 'OK';
+        const id = Math.floor(128 + Math.random() * 100);
+
+        document.getElementById('resultado').innerHTML = `
+            <div class="alert ${status === 'OK' ? 'alert-ok' : 'alert-bad'}">
+                Auditoria <strong>#${id}</strong> concluída! Status: <strong>${status}</strong>
+                (${listaItens.join(', ')})
+                <br><small>Simulação de demonstração. No sistema real, o resultado vem da comparação com o banco de dados.</small>
+            </div>`;
+
+        document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+        return false;
+    }
+</script>
+</body>
+</html>

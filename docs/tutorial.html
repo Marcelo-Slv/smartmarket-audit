@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMarket Audit — tutoriais passo a passo de como usar o sistema de auditoria.">
+    <title>Como usar — SmartMarket Audit</title>
+    <link rel="stylesheet" href="../assets/css/estilo.css">
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">SA</div>
+            <div>
+                <div class="logo-titulo">SmartMarket Audit</div>
+                <div class="logo-sub">Demo online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="nav-link" href="index.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-link" href="auditoria.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
+            <a class="nav-link" href="importar.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Importar Planilha
+            </a>
+            <a class="nav-link" href="relatorio.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Relatório
+            </a>
+            <a class="nav-link ativo" href="tutorial.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Como usar
+            </a>
+        </nav>
+        <div class="sidebar-roda">
+            Dados fictícios de demonstração.<br>
+            <a href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Ver no GitHub</a>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Como usar o SmartMarket Audit</h1>
+                <span class="badge">Tutoriais</span>
+            </div>
+            <p>Guia passo a passo para quem vai operar o sistema no dia a dia.</p>
+        </div>
+
+        <div class="card">
+            <h2>Fluxo de trabalho</h2>
+            <div class="passo">
+                <div class="passo-num">1</div>
+                <div class="passo-conteudo">
+                    <h3>Importe a planilha do fiscal</h3>
+                    <p>
+                        O mercado exporta as vendas da compra em um arquivo CSV. Na tela
+                        <strong>Importar Planilha</strong>, escolha o arquivo e clique em importar.
+                    </p>
+                    <ul>
+                        <li>Colunas esperadas: <code>data</code>, <code>hora</code>, <code>produto</code> e (opcional) <code>quantidade</code>;</li>
+                        <li>O separador pode ser <code>;</code> (Excel brasileiro) ou <code>,</code>;</li>
+                        <li>Use o <a href="../modelo.csv" download>modelo.csv</a> como base.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="passo">
+                <div class="passo-num">2</div>
+                <div class="passo-conteudo">
+                    <h3>Confira os produtos fora do catálogo</h3>
+                    <p>
+                        Depois da importação, a tela mostra quais produtos da planilha
+                        <strong>não existem no catálogo</strong>. Cadastre esses nomes na tabela
+                        <code>produtos</code> (exatamente como aparecem) para a conferência funcionar.
+                    </p>
+                </div>
+            </div>
+
+            <div class="passo">
+                <div class="passo-num">3</div>
+                <div class="passo-conteudo">
+                    <h3>Lance a auditoria de câmera</h3>
+                    <p>
+                        Assista ao vídeo da câmera e, na tela <strong>Nova Auditoria</strong>, selecione a unidade,
+                        a data/hora do vídeo e os <strong>produtos vistos</strong> com as quantidades.
+                    </p>
+                </div>
+            </div>
+
+            <div class="passo">
+                <div class="passo-num">4</div>
+                <div class="passo-conteudo">
+                    <h3>Entenda o resultado</h3>
+                    <p>
+                        Para cada item, o sistema procura o mesmo produto nas vendas importadas em um
+                        intervalo de <strong>±10 minutos</strong> da hora do vídeo:
+                    </p>
+                    <ul>
+                        <li><strong class="ok">OK</strong> — a quantidade paga é igual ou maior que a vista na câmera;</li>
+                        <li><strong class="bad">Divergente</strong> — a câmera viu mais do que foi pago (possível perda/fraude).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="passo">
+                <div class="passo-num">5</div>
+                <div class="passo-conteudo">
+                    <h3>Gere o relatório</h3>
+                    <p>
+                        Na tela <strong>Relatório</strong>, clique em "Baixar / Imprimir PDF" para gerar um
+                        documento consolidado com todas as auditorias e divergências do período.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Perguntas frequentes</h2>
+
+            <details>
+                <summary>O que é uma "divergência"?</summary>
+                <p>É quando a câmera registrou um produto sendo pego, mas não existe o pagamento correspondente na planilha (naquele horário). Isso indica possível perda no estoque.</p>
+            </details>
+
+            <details>
+                <summary>A planilha precisa de um formato específico?</summary>
+                <p>Sim, é só seguir as colunas <code>data;hora;produto;quantidade</code>. Baixe o <a href="../modelo.csv" download>modelo.csv</a>. Se a sua planilha tem outras colunas, reorganize as colunas no Excel antes de salvar como CSV.</p>
+            </details>
+
+            <details>
+                <summary>Onde ficam os dados?</summary>
+                <p>Os dados ficam no banco de dados MySQL da sua própria instalação do sistema. Nesta demonstração online, todos os dados são fictícios.</p>
+            </details>
+
+            <details>
+                <summary>Posso usar no meu condomínio/mercado?</summary>
+                <p>Sim. A versão real (PHP + MySQL) precisa de um servidor que execute PHP — por exemplo, XAMPP na sua máquina ou uma hospedagem. Veja o passo a passo no <a href="https://github.com/Marcelo-Slv/smartmarket-audit#-rodando-localmente-xampp" target="_blank" rel="noopener">README</a>.</p>
+            </details>
+
+            <details>
+                <summary>O intervalo de ±10 minutos pode ser alterado?</summary>
+                <p>Por enquanto é fixo no código. É possível ajustar em <code>salvar_auditoria.php</code> no campo <code>INTERVAL 10 MINUTE</code>.</p>
+            </details>
+        </div>
+
+        <div class="card">
+            <h2>Quer ver o sistema de verdade?</h2>
+            <p class="descricao">
+                Esta é uma demonstração. O sistema completo roda com PHP + MySQL e pode ser instalado no XAMPP.
+            </p>
+            <a class="btn" href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Abrir o repositório no GitHub</a>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

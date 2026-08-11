@@ -121,17 +121,14 @@ function parse_data_hora(string $cel_data, string $cel_hora = ''): ?DateTime {
 $stmt_insert = $conn->prepare('INSERT INTO vendas_importadas (data, hora, produto, produto_id) VALUES (?, ?, ?, ?)');
 $stmt_prod   = $conn->prepare('SELECT id FROM produtos WHERE nome = ? LIMIT 1');
 
-$importados    = 0;
-$ignorados     = 0;
-$sem_catalogo  = [];
-$total_linhas  = 0;
+$importados   = 0;
+$ignorados    = 0;
+$sem_catalogo = [];
 
 while (($linha = fgetcsv($handle, 0, $delim)) !== false) {
     if (count($linha) < 2 || trim(implode('', $linha)) === '') {
         continue;
     }
-
-    $total_linhas++;
 
     $valor_data    = trim($linha[$col_data] ?? '');
     $valor_hora    = trim($linha[$col_hora] ?? '');

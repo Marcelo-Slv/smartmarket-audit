@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMarket Audit — demo do relatório de auditorias em PDF.">
+    <title>Relatório — SmartMarket Audit (demo)</title>
+    <link rel="stylesheet" href="../assets/css/estilo.css">
+    <script src="assets/js/dados.js"></script>
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">SA</div>
+            <div>
+                <div class="logo-titulo">SmartMarket Audit</div>
+                <div class="logo-sub">Demo online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="nav-link" href="index.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-link" href="auditoria.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
+            <a class="nav-link" href="importar.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Importar Planilha
+            </a>
+            <a class="nav-link ativo" href="relatorio.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Relatório
+            </a>
+            <a class="nav-link" href="tutorial.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Como usar
+            </a>
+        </nav>
+        <div class="sidebar-roda">
+            Dados fictícios de demonstração.<br>
+            <a href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Ver no GitHub</a>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Relatório de Auditorias</h1>
+                <span class="badge">Simulação</span>
+            </div>
+            <p>Lista consolidada das auditorias. Use "Baixar / Imprimir" para gerar o PDF.</p>
+        </div>
+
+        <button class="btn no-print" onclick="window.print()">Baixar / Imprimir PDF</button>
+        <a href="index.html" class="btn btn-secundario no-print">Voltar ao Dashboard</a>
+
+        <div class="card" style="margin-top:20px;">
+            <h2>Relatório de Auditorias</h2>
+            <p class="descricao">
+                Total de divergências: <strong id="total-div">0</strong> &nbsp;|&nbsp;
+                Gerado em <span id="data-gerado"></span> &nbsp;|&nbsp; Dados fictícios (demo)
+            </p>
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data/Hora</th>
+                            <th>Unidade</th>
+                            <th>Produtos</th>
+                            <th>Status</th>
+                            <th>Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-relatorio"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    document.getElementById('data-gerado').textContent = new Date().toLocaleString('pt-BR');
+
+    const divs = DEMO.auditorias.filter(a => a.status === 'Divergente').length;
+    document.getElementById('total-div').textContent = divs;
+
+    document.getElementById('tabela-relatorio').innerHTML = DEMO.auditorias.map(a => `
+        <tr>
+            <td>#${a.id}</td>
+            <td>${a.data}</td>
+            <td>${a.unidade}</td>
+            <td>${a.itens}</td>
+            <td><span class="status ${a.status === 'OK' ? 'ok' : 'bad'}">${a.status}</span></td>
+            <td>${a.obs || '—'}</td>
+        </tr>`).join('');
+</script>
+</body>
+</html>

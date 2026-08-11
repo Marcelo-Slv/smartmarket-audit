@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMarket Audit — demonstração online com dados fictícios. Sistema de auditoria de câmeras em mercados de autoatendimento.">
+    <title>Dashboard — SmartMarket Audit (demo)</title>
+    <link rel="stylesheet" href="../assets/css/estilo.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/dados.js"></script>
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">SA</div>
+            <div>
+                <div class="logo-titulo">SmartMarket Audit</div>
+                <div class="logo-sub">Demo online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a class="nav-link ativo" href="index.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-link" href="auditoria.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
+            <a class="nav-link" href="importar.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Importar Planilha
+            </a>
+            <a class="nav-link" href="relatorio.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Relatório
+            </a>
+            <a class="nav-link" href="tutorial.html">
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Como usar
+            </a>
+        </nav>
+        <div class="sidebar-roda">
+            Dados fictícios de demonstração.<br>
+            <a href="https://github.com/Marcelo-Slv/smartmarket-audit" target="_blank" rel="noopener">Ver no GitHub</a>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="topo">
+            <div class="topo-titulo">
+                <h1>Dashboard Auditoria</h1>
+                <span class="badge">Simulação</span>
+            </div>
+            <p>Sistema de auditoria de mercado autônomo — compare o que as câmeras registraram com as vendas da planilha.</p>
+        </div>
+
+        <div class="alert alert-info">
+            Esta é uma <strong>demonstração</strong> com dados fictícios, mostrando o visual e o fluxo do sistema.
+            A versão real (PHP + MySQL) roda no seu servidor. <a href="https://github.com/Marcelo-Slv/smartmarket-audit#-rodando-localmente-xampp">Veja como rodar</a>.
+        </div>
+
+        <div class="kpis">
+            <div class="kpi">
+                <h3>Total de auditorias</h3>
+                <div class="valor accent" id="kpi-total">0</div>
+                <div class="detalhe">registradas no período</div>
+            </div>
+            <div class="kpi">
+                <h3>OK</h3>
+                <div class="valor ok" id="kpi-ok">0</div>
+                <div class="detalhe">itens conferidos e pagos</div>
+            </div>
+            <div class="kpi">
+                <h3>Divergências</h3>
+                <div class="valor bad" id="kpi-div">0</div>
+                <div class="detalhe">câmera viu mais do que o pago</div>
+            </div>
+            <div class="kpi">
+                <h3>Taxa de divergência</h3>
+                <div class="valor warn" id="kpi-taxa">0%</div>
+                <div class="detalhe">do total de auditorias</div>
+            </div>
+            <div class="kpi">
+                <h3>Auditorias hoje</h3>
+                <div class="valor accent" id="kpi-hoje">0</div>
+                <div class="detalhe">neste dia</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Status das auditorias</h2>
+                <div class="grafico-box">
+                    <canvas id="grafico"></canvas>
+                </div>
+                <div style="text-align:center; margin-top:14px;">
+                    <a class="btn" href="auditoria.html">+ Lançar Auditoria</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Histórico de auditorias</h2>
+                <div class="filtros">
+                    <div>
+                        <label>Status</label>
+                        <select id="filtro-status">
+                            <option value="">Todos</option>
+                            <option value="OK">OK</option>
+                            <option value="Divergente">Divergente</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>De</label>
+                        <input type="date" id="filtro-inicio">
+                    </div>
+                    <div>
+                        <label>Até</label>
+                        <input type="date" id="filtro-fim">
+                    </div>
+                </div>
+                <div class="tabela-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data/Hora</th>
+                                <th>Unidade</th>
+                                <th>Produtos</th>
+                                <th>Status</th>
+                                <th>Observação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-auditorias"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    // KPIs
+    document.getElementById('kpi-total').textContent = DEMO.kpis.total;
+    document.getElementById('kpi-ok').textContent = DEMO.kpis.ok;
+    document.getElementById('kpi-div').textContent = DEMO.kpis.divergentes;
+    document.getElementById('kpi-taxa').textContent = DEMO.kpis.taxa + '%';
+    document.getElementById('kpi-hoje').textContent = DEMO.kpis.hoje;
+
+    // Gráfico
+    new Chart(document.getElementById('grafico'), {
+        type: 'doughnut',
+        data: {
+            labels: ['OK', 'Divergente'],
+            datasets: [{
+                data: [DEMO.kpis.ok, DEMO.kpis.divergentes],
+                backgroundColor: ['#16a34a', '#dc2626'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Tabela
+    function renderTabela(lista) {
+        const tbody = document.getElementById('tabela-auditorias');
+        if (lista.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhuma auditoria encontrada.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = lista.map(a => `
+            <tr>
+                <td>#${a.id}</td>
+                <td>${a.data}</td>
+                <td>${a.unidade}</td>
+                <td>${a.itens}</td>
+                <td><span class="status ${a.status === 'OK' ? 'ok' : 'bad'}">${a.status}</span></td>
+                <td>${a.obs || '—'}</td>
+            </tr>`).join('');
+    }
+
+    // Filtros (simulados)
+    const filtroStatus = document.getElementById('filtro-status');
+    const filtroInicio = document.getElementById('filtro-inicio');
+    const filtroFim = document.getElementById('filtro-fim');
+    filtroStatus.addEventListener('change', aplicarFiltro);
+    filtroInicio.addEventListener('change', aplicarFiltro);
+    filtroFim.addEventListener('change', aplicarFiltro);
+
+    function aplicarFiltro() {
+        let lista = DEMO.auditorias;
+        if (filtroStatus.value) {
+            lista = lista.filter(a => a.status === filtroStatus.value);
+        }
+        renderTabela(lista);
+    }
+
+    renderTabela(DEMO.auditorias);
+</script>
+</body>
+</html>

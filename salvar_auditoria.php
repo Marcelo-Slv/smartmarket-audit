@@ -1,14 +1,26 @@
 <?php
 require_once 'conexao.php';
 
-$unidade    = (int) ($_POST['unidade_id'] ?? 0);
-$data_video = trim($_POST['data_hora_video'] ?? '');
-$obs        = trim($_POST['observacao'] ?? '');
-$produtos   = $_POST['produto_id'] ?? [];
-$quantidades = $_POST['quantidade'] ?? [];
+$unidade     = (int) ($_POST['unidade_id'] ?? 0);
+$data_video  = trim($_POST['data_hora_video'] ?? '');
+$obs         = trim($_POST['observacao'] ?? '');
+$produtos    = (array) ($_POST['produto_id'] ?? []);
+$quantidades = (array) ($_POST['quantidade'] ?? []);
 
-if ($unidade <= 0 || $data_video === '' || empty($produtos)) {
-    header('Location: auditoria_nova.php?erro=' . urlencode('Preencha a unidade, a data/hora e pelo menos um produto.'));
+// Validação básica
+if ($unidade <= 0 || $data_video === '') {
+    header('Location: auditoria_nova.php?erro=' . urlencode('Preencha a unidade e a data/hora do vídeo.'));
+    exit;
+}
+
+$items_validos = 0;
+foreach ($produtos as $pid) {
+    if ((int) $pid > 0) {
+        $items_validos++;
+    }
+}
+if ($items_validos === 0) {
+    header('Location: auditoria_nova.php?erro=' . urlencode('Adicione pelo menos um produto.'));
     exit;
 }
 
@@ -59,5 +71,5 @@ $stmt_upd = $conn->prepare('UPDATE auditoria_camera SET status = ? WHERE id = ?'
 $stmt_upd->bind_param('si', $status_final, $auditoria_id);
 $stmt_upd->execute();
 
-header('Location: dashboard.php?msg=' . urlencode("Auditoria concluída! Status: $status_final"));
+header('Location: dashboard.php?msg=' . urlencode("Auditoria #$auditoria_id concluída! Status: $status_final"));
 exit;
