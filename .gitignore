@@ -12,3 +12,12 @@ dist/
 # Sistema
 Thumbs.db
 .DS_Store
+
+# PHP / Banco de dados
+vendor/
+.env
+*.log
+*.sql
+
+# Credenciais do banco — ignore o arquivo com a senha
+# ex.: /config.php, /db/conexao.php, /config/conexao.php

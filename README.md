@@ -13,10 +13,11 @@ Em mercados de autoatendimento, a conferência entre o que foi cadastrado no sis
 - Gera **relatórios** consolidados;
 - **Exporta em PDF** para registro e análise.
 
-## 🛠️ Tecnologias sugeridas
+## 🛠️ Tecnologias
 
-- **Angular** — front-end
+- **PHP** — backend e front-end
 - **MySQL** — banco de dados
+- **HTML / CSS / JavaScript** — interface no VSCode
 - **Relatórios / PDF** — geração de documentos
 
 ## 🗺️ Próximos passos
@@ -25,6 +26,7 @@ Em mercados de autoatendimento, a conferência entre o que foi cadastrado no sis
 - [ ] Tela de importação/leitura do fiscal
 - [ ] Regras de conferência e divergências
 - [ ] Relatórios e exportação em PDF
+- [ ] Subir o código do projeto no repositório
 - [ ] Deploy
 
 ---
