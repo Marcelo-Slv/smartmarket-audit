@@ -2,6 +2,8 @@
 
 > Sistema web para **conferência de compras em mercados de autoatendimento** — compara os produtos registrados no banco de dados com os itens do fiscal, aponta divergências e gera relatórios com exportação em PDF.
 
+> 📌 Projeto em destaque no [meu portfólio](https://marcelo-slv.github.io/portf-lio/).
+
 ## 🎯 Contexto
 
 Em mercados de autoatendimento, a conferência entre o que foi cadastrado no sistema e o que consta no fiscal da compra é manual e sujeita a erro. O SmartMarket Audit automatiza essa conferência:
