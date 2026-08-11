@@ -129,6 +129,7 @@ smartmarket-audit/
 - [ ] Login e permissões
 - [ ] Parâmetro configurável do intervalo de conferência
 - [ ] Deploy (hospedagem PHP + MySQL)
+- [ ] Automatização do Sistema por meio de uma IA que deverá analisar as câmeras
 
 ---
 
