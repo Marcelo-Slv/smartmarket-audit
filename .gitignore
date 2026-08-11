@@ -13,11 +13,17 @@ dist/
 Thumbs.db
 .DS_Store
 
-# PHP / Banco de dados
+# PHP / dependências
 vendor/
-.env
 *.log
-*.sql
+.env
 
-# Credenciais do banco — ignore o arquivo com a senha
-# ex.: /config.php, /db/conexao.php, /config/conexao.php
+# Credenciais do banco — NUNCA versionar
+config.php
+
+# Arquivos enviados/importados pela aplicação
+uploads/
+
+# Dumps locais do banco (com dados reais)
+dumps/
+*.sql.backup
